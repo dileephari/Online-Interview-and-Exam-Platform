@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Voice Editing AI{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, var(--bg-gradient-start, #f0f0f0), var(--bg-gradient-end, #c0c0c0));
+            color: #333;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        header {
+            background: #333;
+            color: white;
+            padding: 12px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            z-index: 1000;
+        }
+
+        /* LEFT: Home + Upload */
+        .left-nav {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .left-nav a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .left-nav a:hover { text-decoration: underline; }
+
+        /* RIGHT: Logo + other links */
+        .right-nav {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+        }
+        .right-nav a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+        .right-nav a:hover { text-decoration: underline; }
+
+        /* User Avatar */
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background-color: #0f766e;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            margin-left: 15px;
+            cursor: pointer;
+            position: relative;
+        }
+
+        /* Dropdown Menu */
+        .avatar-dropdown {
+            display: none;
+            position: absolute;
+            top: 50px;
+            right: 0;
+            background: #fff;
+            color: #333;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            overflow: hidden;
+            min-width: 150px;
+            z-index: 2000;
+        }
+
+        .avatar-dropdown a {
+            display: block;
+            padding: 10px 15px;
+            text-decoration: none;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .avatar-dropdown a:hover {
+            background-color: #f0f0f0;
+        }
+
+        /* Main container */
+        .container { padding: 20px; }
+
+        h1 { font-size: 32px; margin-top: 0; }
+        p { font-size: 16px; line-height: 1.5; }
+
+        a.button, button {
+            display: inline-block;
+            padding: 12px 25px;
+            margin: 10px 5px;
+            background: var(--primary, #007bff);
+            color: white;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 18px;
+            transition: 0.3s;
+            border: none;
+            cursor: pointer;
+        }
+        a.button:hover, button:hover { background: var(--primary-dark, #0056b3); }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            padding: 14px 0;
+            color: #444;
+            margin-top: 30px;
+        }
+
+        @media (max-width: 768px){
+            header {
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-start;
+            }
+            .right-nav {
+                flex-direction: column;
+                gap: 6px;
+            }
+            .left-nav { gap: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <!-- LEFT: Home + Upload -->
+        <div class="left-nav">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="#">Solutions</a>
+            <a href="#">Products</a>
+            <a href="#">Resources</a>
+            <a href="#">Pricing</a>
+            <a href="#">For Developers</a>
+            <a href="{% url 'exam_list' %}">Start Exam</a>
+        </div>
+
+        <!-- RIGHT: Sign in / Register or Avatar -->
+        <div class="right-nav">
+            {% if user.is_authenticated %}
+                <div class="user-avatar" onclick="toggleDropdown()">
+                    {{ user.username|slice:":1"|upper }}
+                    <div class="avatar-dropdown" id="avatarDropdown">
+                        <a href="">Profile</a>
+                        <a href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </div>
+            {% else %}
+                <a href="{% url 'login' %}">Sign in</a>
+                <a href="{% url 'user_confirm' %}">Create a Free Account</a>
+            {% endif %}
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="container">
+        {% block content %}
+        <h1>Welcome Exam</h1>
+        {% endblock %}
+    </div>
+
+    <script>
+        function toggleDropdown() {
+            const dropdown = document.getElementById('avatarDropdown');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        // Close dropdown if clicked outside
+        window.addEventListener('click', function(e) {
+            const avatar = document.querySelector('.user-avatar');
+            const dropdown = document.getElementById('avatarDropdown');
+            if (!avatar.contains(e.target)) {
+                dropdown.style.display = 'none';
+            }
+        });
+    </script>
+
+    <!-- FOOTER -->
+</body>
+</html>

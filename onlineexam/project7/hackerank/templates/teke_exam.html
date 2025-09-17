@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ exam.name }}</title>
+</head>
+<body>
+    <h1>{{ exam.name }}</h1>
+    <p>{{ exam.description }}</p>
+    <p>Duration: {{ exam.duration }} minutes</p>
+
+    <form method="post">
+        {% csrf_token %}
+        {% for question in questions %}
+            <div style="margin-bottom:20px;">
+                <p><strong>Q{{ forloop.counter }}: {{ question.text }}</strong></p>
+                <input type="radio" name="question_{{ question.id }}" value="{{ question.option1 }}"> {{ question.option1 }}<br>
+                <input type="radio" name="question_{{ question.id }}" value="{{ question.option2 }}"> {{ question.option2 }}<br>
+                {% if question.option3 %}
+                    <input type="radio" name="question_{{ question.id }}" value="{{ question.option3 }}"> {{ question.option3 }}<br>
+                {% endif %}
+                {% if question.option4 %}
+                    <input type="radio" name="question_{{ question.id }}" value="{{ question.option4 }}"> {{ question.option4 }}<br>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="submit">Submit Answers</button>
+    </form>
+    <br>
+    <a href="{% url 'exam_list' %}">Back to Exam List</a>
+</body>
+</html>

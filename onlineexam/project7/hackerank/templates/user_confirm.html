@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Confirm - HackerRow{% endblock %}
+
+{% block content %}
+<style>
+.confirm-wrapper {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 60px;
+  padding: 40px 60px;
+  position: relative;
+}
+
+.confirm-container {
+  width: 350px;
+}
+
+.confirm-container h1 {
+  font-size: 36px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  color: #111;
+}
+
+.options-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.option-card {
+  background: #f9fafb;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  padding: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #111;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  user-select: text;
+}
+
+.option-card:hover {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.option-card.active {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+.info-window {
+  flex: 1;
+  max-width: 600px;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 30px;
+  border: 2px solid #e5e7eb;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  opacity: 0;
+  transform: translateX(50px);
+  pointer-events: none;
+  transition: all 0.4s ease;
+  display: flex;
+  gap: 30px;
+}
+
+.info-window.active {
+  opacity: 1;
+  transform: translateX(0);
+  pointer-events: auto;
+}
+
+.info-window img {
+  width: 200px;
+  border-radius: 12px;
+  object-fit: cover;
+}
+
+.info-text {
+  flex: 1;
+}
+
+.info-text h2 {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: #0f766e;
+}
+
+.info-text ul {
+  list-style: none;
+  padding: 0;
+}
+
+.info-text li {
+  font-size: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.info-text li::before {
+  content: "✔";
+  color: green;
+  font-weight: bold;
+}
+
+.create-account-note {
+  margin-top: 30px;
+}
+
+.create-account-note .green-btn {
+  display: inline-block;
+  padding: 12px 25px;
+  background-color: #10b981;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.create-account-note .green-btn:hover {
+  background-color: #059669;
+  transform: translateY(-2px);
+}
+
+.create-account-note p {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #555;
+}
+
+@media(max-width:1024px){
+  .confirm-wrapper {
+    flex-direction: column;
+    gap: 30px;
+  }
+  .info-window {
+    flex-direction: column;
+    gap: 20px;
+  }
+  .info-window img {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+</style>
+
+<div class="confirm-wrapper">
+  <div class="confirm-container">
+    <h1>How do you want to use HackerRow?</h1>
+    <div class="options-list">
+      <div class="option-card" onclick="selectOption(this, 'hire')">
+        I am here to hire tech talent
+      </div>
+      <div class="option-card" onclick="selectOption(this, 'practice')">
+        I am here to practice and prepare
+      </div>
+    </div>
+
+    <div class="create-account-note">
+      <a href="{% url 'register' %}" class="green-btn" id="create-account-btn">Create Account</a>
+      <p>Start your journey with HackerRow today!</p>
+    </div>
+  </div>
+
+  <div id="hire-window" class="info-window">
+    <img src="{% static 'images/hire.jpeg' %}" alt="Hire Image">
+    <div class="info-text">
+      <h2>15 Days Free Trial</h2>
+      <ul>
+        <li>Unlimited coding interviews</li>
+        <li>20 assessment attempts</li>
+        <li>Library of hiring questions</li>
+        <li>40+ languages</li>
+        <li>95 skills</li>
+        <li>24 hours a day support</li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="practice-window" class="info-window">
+    <img src="{% static 'images/practice.jpeg' %}" alt="Practice Image">
+    <div class="info-text">
+      <h2>Free Account</h2>
+      <ul>
+        <li>1000+ problems solve</li>
+        <li>Interview preparation skills</li>
+        <li>Interview preparation certificate</li>
+        <li>Company verified mock tests</li>
+        <li>100 skills to learn</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function selectOption(el, type) {
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+
+  document.getElementById("hire-window").classList.remove("active");
+  document.getElementById("practice-window").classList.remove("active");
+
+  if(type === "hire") {
+    document.getElementById("hire-window").classList.add("active");
+    document.getElementById("create-account-btn").href = "{% url 'register' %}?type=hire";
+  } else {
+    document.getElementById("practice-window").classList.add("active");
+    document.getElementById("create-account-btn").href = "{% url 'register' %}?type=practice";
+  }
+}
+</script>
+
+{% endblock %}

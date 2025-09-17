@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>All Exams</title>
+</head>
+<body>
+    <h1>Available Exams</h1>
+    <ul>
+        {% for exam in exams %}
+            <li>
+                <strong>{{ exam.name }}</strong> - {{ exam.description }}
+                <a href="{% url 'take_exam' exam.id %}">Take Exam</a>
+            </li>
+        {% empty %}
+            <li>No exams available.</li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'create_exam' %}">Create New Exam</a>
+</body>
+</html>
